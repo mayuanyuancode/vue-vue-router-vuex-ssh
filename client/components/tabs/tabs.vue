@@ -17,7 +17,7 @@ export default {
       panes: []
     }
   },
-  render () {
+  render (h) {
     return (
       <div class='tabs'>
         <ul class='tabs-header'>

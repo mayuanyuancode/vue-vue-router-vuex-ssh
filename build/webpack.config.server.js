@@ -1,5 +1,6 @@
 const path = require('path')
-const ExtractPlugin = require('extract-text-webpack-plugin')
+// const ExtractPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 const baseConfig = require('./webpack.config.base')
@@ -10,7 +11,10 @@ let config
 const isDev = process.env.NODE_ENV === 'development'
 
 const plugins = [
-  new ExtractPlugin('styles.[contentHash:8].css'),
+  // new ExtractPlugin('styles.[contentHash:8].css'),
+  new MiniCssExtractPlugin({
+    filename: 'styles.[contentHash:8].css'
+  }),
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
     'process.env.VUE_ENV': '"server"'
@@ -35,7 +39,8 @@ config = merge(baseConfig, {
     rules: [
       {
         test: /\.styl/,
-        use: ExtractPlugin.extract({
+        // 由ExtractPlugin更换为MiniCssExtractPlugin
+        use: MiniCssExtractPlugin.extract({
           fallback: 'vue-style-loader',
           use: [
             'css-loader',

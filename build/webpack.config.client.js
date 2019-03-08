@@ -2,7 +2,8 @@ const path = require('path')
 const HTMLPlugin = require('html-webpack-plugin')
 const webpack = require('webpack')
 const merge = require('webpack-merge')
-const ExtractPlugin = require('extract-text-webpack-plugin')
+// const ExtractPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const baseConfig = require('./webpack.config.base')
 const VueClientPlugin = require('vue-server-renderer/client-plugin')
 const cdnConfig = require('../app.config').cdn
@@ -46,6 +47,7 @@ if (isDev) {
     // output: {
     //   publicPath: '/public/' // 真正的静态资源文件名前的前缀; 路由配置通过不同前缀进行不同的处理方式
     // },
+    mode: 'development',
     devtool: '#cheap-module-eval-source-map',
     module: {
       rules: [
@@ -73,6 +75,7 @@ if (isDev) {
   })
 } else {
   config = merge(baseConfig, {
+    mode: 'production',
     entry: {
       app: path.join(__dirname, '../client/client-entry.js'),
       vendor: ['vue']
@@ -85,7 +88,7 @@ if (isDev) {
       rules: [
         {
           test: /\.styl/,
-          use: ExtractPlugin.extract({
+          use: MiniCssExtractPlugin.extract({
             fallback: 'vue-style-loader',
             use: [
               'css-loader',
@@ -102,13 +105,15 @@ if (isDev) {
       ]
     },
     plugins: defaultPluins.concat([
-      new ExtractPlugin('styles.[contentHash:8].css'),
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'vendor'
+      new MiniCssExtractPlugin({
+        filename: 'styles.[contentHash:8].css'
       }),
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'runtime'
-      }),
+      // new webpack.optimize.CommonsChunkPlugin({
+      //   name: 'vendor'
+      // }),
+      // new webpack.optimize.CommonsChunkPlugin({
+      //   name: 'runtime'
+      // }),
       new webpack.NamedChunksPlugin()
     ])
   })

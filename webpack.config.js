@@ -90,13 +90,13 @@ if (isDev) {
           {
             loader: 'postcss-loader',
             options: {
-              sourceMap: true,
+              sourceMap: true
             }
           },
           'stylus-loader'
         ]
       })
-    },
+    }
   )
   config.plugins.push(
     new ExtractPlugin('styles.[contentHash:8].css'),
